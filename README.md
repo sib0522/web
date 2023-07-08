@@ -1,5 +1,10 @@
 # web
 
+### Environment
+<b>・language</b>　　　Go<br>
+<b>・framework</b>　　 Go Echo<br>
+<b>・database</b>　　　MySQL<br>
+
 ### Directories
 <b>・models</b>　　　データベースとの通信を行いデータを取得及び処理する<br>
 <b>・views</b>　　　　controllerからデータなどを受け取りブラウザに表示する<br>
