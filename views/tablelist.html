@@ -1,0 +1,44 @@
+{{define "tablelist"}}
+<html>
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="../public/css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+</head>
+<body>
+{{template "header_navi" .isLogin}}
+<div id="layoutSidenav">
+    {{template "sideNaviOnly"}}
+    <div id="layoutSidenav_content">
+        <div class="container-fluid px-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-table me-1"></i>
+                    管理画面DB
+                </div>
+                <div class="card-body">
+                    <table id="datatablesSimple">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Version</th>
+                            <th>Update</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr><td><a id="submit-js" href="tablelist/account">account</a></td><td>1.0.0</td><td>2023-7-15</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {{template "footer"}}
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="../public/js/scripts.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+<script src="../public/js/datatables-simple-demo.js"></script>
+</body>
+</html>
+{{end}}

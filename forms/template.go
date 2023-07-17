@@ -2,7 +2,6 @@ package forms
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/playree/goingtpl"
 	"html/template"
 	"io"
 )
@@ -17,7 +16,8 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 
 func getRenderer(fileName string) *TemplateRenderer {
 	renderer := &TemplateRenderer{
-		templates: template.Must(goingtpl.ParseFile(fileName)),
+		//templates: template.Must(goingtpl.ParseFile(fileName)),
+		templates: template.Must(template.ParseGlob("./views/*.html")),
 	}
 	return renderer
 }

@@ -14,6 +14,15 @@ func SignUp(c echo.Context) error {
 	p := c.FormValue("password")
 	confirm := c.FormValue("password2")
 
+	if nickName == "" || email == "" || p == "" || confirm == "" {
+		return c.Redirect(http.StatusFound, "/register")
+		/*
+			return c.Render(http.StatusOK, "/register", map[string]bool{
+				"isShowAlert": true,
+			})
+		*/
+	}
+
 	if p != confirm {
 		return c.String(http.StatusExpectationFailed, "入力したパスワードを確認してください")
 	}
@@ -27,7 +36,12 @@ func SignUp(c echo.Context) error {
 		Password: password,
 		Email:    email,
 	}
+
+	if b := account.Read(); b == true {
+		return c.String(http.StatusExpectationFailed, "既に存在しているアカウント名です")
+	}
+
 	account.Create()
 
-	return c.String(http.StatusOK, "creating account is success.")
+	return c.Render(http.StatusOK, "success", nil)
 }

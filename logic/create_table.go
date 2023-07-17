@@ -1,26 +1,32 @@
 package logic
 
 import (
-	"GoEcho/database"
 	"GoEcho/models"
-	"fmt"
-	"github.com/labstack/echo/v4"
 )
 
-func CreateTable(c echo.Context) error {
-	db := database.ConnectDB()
-	if db == nil {
-		return nil
+type Table struct {
+	IsLogin bool
+	Name    string
+	Columns []string
+	RowsMap map[uint][]string
+}
+
+var tableMap = map[string]models.Model{
+	"account": &models.Account{},
+	"user":    &models.User{},
+}
+
+func CreateTable(tableName string) Table {
+	m := tableMap[tableName]
+	columnNames := m.ReadColumns()
+	rowsMap := m.ReadAllToString()
+
+	tb := &Table{
+		IsLogin: true,
+		Name:    tableName,
+		Columns: columnNames,
+		RowsMap: rowsMap,
 	}
 
-	var user models.User
-	columnNames := user.ReadColumns()
-
-	var cols string
-
-	for _, col := range columnNames {
-		cols = cols + fmt.Sprintf("\t\t<th>%v</th>\n\t\t", col)
-	}
-
-	return nil
+	return *tb
 }
