@@ -8,5 +8,7 @@ import (
 
 func Register(c echo.Context) error {
 	forms.SetRenderer(c.Echo(), "views/register.html")
-	return c.Render(http.StatusOK, "register", nil)
+	return c.Render(http.StatusOK, "register", map[string]bool{
+		"isShowAlert": false,
+	})
 }

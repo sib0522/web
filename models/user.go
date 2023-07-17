@@ -17,6 +17,13 @@ type User struct {
 	UpdatedAt time.Time
 }
 
+type userHolder struct {
+	uuid, id, name, level, exp, createdAt, updatedAt []byte
+}
+
+// Create 管理画面上では生成できない
+func (user *User) Create() {}
+
 // ReadAll 全ユーザーデータを取得
 func (user *User) ReadAll() []*User {
 	db := database.ConnectDB()
@@ -50,4 +57,36 @@ func (user *User) ReadColumns() []string {
 	}
 
 	return columns
+}
+
+// ReadAllToString 全データを取得しstring型のスライスに変換する
+func (user *User) ReadAllToString() map[uint][]string {
+	db := database.ConnectDB()
+	query := fmt.Sprint("SELECT * FROM user")
+	rows := db.Query(query)
+	result := make(map[uint][]string)
+	var idx uint = 0
+
+	for rows.Next() {
+		holder := new(userHolder)
+
+		err := rows.Scan(&holder.uuid, &holder.id, &holder.name, &holder.level, &holder.exp, &holder.createdAt, &holder.updatedAt)
+		if err != nil {
+			log.Error("データの取得に失敗しました")
+			return nil
+		}
+
+		result[idx] = []string{
+			string(holder.uuid),
+			string(holder.id),
+			string(holder.name),
+			string(holder.level),
+			string(holder.exp),
+			string(holder.createdAt),
+			string(holder.updatedAt),
+		}
+		idx++
+	}
+
+	return result
 }

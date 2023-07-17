@@ -22,11 +22,4 @@ window.addEventListener('DOMContentLoaded', event => {
             localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
         });
     }
-
-    const template = document.getElementById('sideNavi');
-
-    const clone = template.content.cloneNode(true);
-
-    document.getElementById('container').appendChild(clone)
-
 });

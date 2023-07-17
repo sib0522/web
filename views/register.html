@@ -50,6 +50,11 @@
                                             <div class="mt-4 mb-0">
                                                 <div class="d-grid"><input class="btn btn-primary btn-block" id="submit" type="submit"></div>
                                             </div>
+                                            {{ if eq .isShowAlert true }}
+                                            <div>
+                                                <p style="color:red">必須情報が入力されていません</p>
+                                            </div>
+                                            {{ end }}
                                         </form>
                                     </div>
                                     <div class="card-footer text-center py-3">
