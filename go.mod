@@ -11,8 +11,10 @@ require (
 )
 
 require (
+	github.com/aws/aws-sdk-go v1.45.6 // indirect
 	github.com/gorilla/context v1.1.1 // indirect
 	github.com/gorilla/securecookie v1.1.1 // indirect
+	github.com/jmespath/go-jmespath v0.4.0 // indirect
 )
 
 require (

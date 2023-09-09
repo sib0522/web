@@ -8,7 +8,7 @@ import (
 )
 
 type Gallery struct {
-	Id        string    `db:"id""`
+	Id        string    `db:"id"`
 	Path      string    `db:"path"`
 	CreatedAt time.Time `db:"created_at"`
 	UpdatedAt time.Time `db:"updated_at"`
