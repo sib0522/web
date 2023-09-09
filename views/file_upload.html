@@ -10,7 +10,7 @@
 <body>
 {{template "header_navi" .isLogin}}
 <div id="layoutSidenav">
-    {{template "sideNaviOnly"}}
+    {{template "side_navi"}}
     <div id="layoutSidenav_content">
         <main>
             <div class="container-fluid px-4">
@@ -22,7 +22,7 @@
                 <div class="card mb-4">
                     <div class="card-body">
                         <p class="mb-0">
-                        <form action="/upload" method="post" enctype="multipart/form-data">
+                        <form action="/upload/images" method="post" enctype="multipart/form-data">
                             Files: <input type="file" name="file" multiple><br><br>
                             <input type="submit" value="Submit">
                         </form>
@@ -31,7 +31,7 @@
                 </div>
             </div>
         </main>
-        {{template "footer"}}
+        {{template "footer_label"}}
     </div>
 </div>
 <script src="../public/js/scripts.js"></script>
