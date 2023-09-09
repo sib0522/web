@@ -2,12 +2,16 @@ package logic
 
 import (
 	"GoEcho/models"
-	"net/http"
-
-	"github.com/gorilla/sessions"
-	"github.com/labstack/echo-contrib/session"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
+	"net/http"
+	"time"
 )
+
+type TokenData struct {
+	Nickname string `json:"nickname"`
+	jwt.RegisteredClaims
+}
 
 func Login(c echo.Context) error {
 	// Viewからemailとpasswordを取得する
@@ -22,23 +26,26 @@ func Login(c echo.Context) error {
 	// 読み取りできるアカウントのデータがないと一致するデータが存在しないことにする
 	b := account.Read()
 	if b == false {
-		return c.String(http.StatusOK, "ログインに失敗しました")
+		return c.String(404, "ログインに失敗しました")
 	}
 
-	c.Echo().Use(session.Middleware(sessions.NewCookieStore([]byte("secret"))))
-	ses, _ := session.Get("session", c)
-	ses.Options = &sessions.Options{
-		MaxAge:   86400 * 7,
-		HttpOnly: true,
+	claims := &TokenData{
+		account.Nickname,
+		jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute * 1)),
+		},
 	}
 
-	ses.Values["id"] = account.Id
-	ses.Values["nickName"] = account.Nickname
-	ses.Values["in"] = true
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	if err := ses.Save(c.Request(), c.Response()); err != nil {
-		return c.NoContent(http.StatusInternalServerError)
+	t, err := token.SignedString([]byte("jwtUserLogin"))
+	if err != nil {
+		return err
 	}
 
-	return c.String(http.StatusOK, "ログインに成功しました")
+	c.Request().Header.Add("user", t)
+
+	return c.JSON(http.StatusOK, map[string]string{
+		"token": t,
+	})
 }

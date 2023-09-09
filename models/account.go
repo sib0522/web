@@ -52,7 +52,6 @@ func (account *Account) Read() bool {
 
 	for rows.Next() {
 		err := rows.Scan(&account.Id, &account.Email, &account.Password, &account.Nickname, &account.CreatedAt, &account.UpdatedAt)
-		log.Error(err)
 		if err != nil {
 			log.Error("このアカウントは無効です")
 			return false
