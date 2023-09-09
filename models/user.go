@@ -9,8 +9,6 @@ import (
 
 type User struct {
 	UUID      string
-	Id        uint
-	Name      string
 	Level     uint
 	Exp       int
 	CreatedAt time.Time
@@ -18,11 +16,27 @@ type User struct {
 }
 
 type userHolder struct {
-	uuid, id, name, level, exp, createdAt, updatedAt []byte
+	uuid, level, exp, createdAt, updatedAt []byte
 }
 
 // Create 管理画面上では生成できない
-func (user *User) Create() {}
+func (user *User) Create() {
+	db := database.ConnectDB()
+	query := fmt.Sprintf("INSERT INTO user (UUID, USER_LEVEL, USER_EXP, CREATED_AT, UPDATED_AT) VALUES ('%v', '%v', '%v', '%v', '%v')",
+		user.UUID,
+		user.Level,
+		user.Exp,
+
+		// https://qiita.com/icbmuma/items/5617f3fc5bc0215aade2
+		// golangで時間をフォーマット指定した文字列に変換する時には
+		// %Yといったような制御文字で表すのではなくて
+		// "2006/1/2 15:04:05"という決まった日付に対して、出力例を与えるような形になっている。
+		// (ちなみに、この日以外の指定は受け付けないので注意。)
+		time.Now().Format("2006-01-02 15:04:05"),
+		time.Now().Format("2006-01-02 15:04:05"),
+	)
+	db.Query(query)
+}
 
 // ReadAll 全ユーザーデータを取得
 func (user *User) ReadAll() []*User {
@@ -34,7 +48,7 @@ func (user *User) ReadAll() []*User {
 
 	for rows.Next() {
 		user := new(User)
-		err := rows.Scan(user.UUID, user.Id, user.Name, user.Level, user.Exp, user.CreatedAt, user.UpdatedAt)
+		err := rows.Scan(user.UUID, user.Level, user.Exp, user.CreatedAt, user.UpdatedAt)
 		if err != nil {
 			log.Error("データの取得に失敗しました")
 			return nil
@@ -59,7 +73,7 @@ func (user *User) ReadColumns() []string {
 	return columns
 }
 
-// ReadAllToString 全データを取得しstring型のスライスに変換する
+// ReadAllToString 全データを取得しstring型のスライスに変換する(管理画面用）
 func (user *User) ReadAllToString() map[uint][]string {
 	db := database.ConnectDB()
 	query := fmt.Sprint("SELECT * FROM user")
@@ -70,7 +84,7 @@ func (user *User) ReadAllToString() map[uint][]string {
 	for rows.Next() {
 		holder := new(userHolder)
 
-		err := rows.Scan(&holder.uuid, &holder.id, &holder.name, &holder.level, &holder.exp, &holder.createdAt, &holder.updatedAt)
+		err := rows.Scan(&holder.uuid, &holder.level, &holder.exp, &holder.createdAt, &holder.updatedAt)
 		if err != nil {
 			log.Error("データの取得に失敗しました")
 			return nil
@@ -78,8 +92,6 @@ func (user *User) ReadAllToString() map[uint][]string {
 
 		result[idx] = []string{
 			string(holder.uuid),
-			string(holder.id),
-			string(holder.name),
 			string(holder.level),
 			string(holder.exp),
 			string(holder.createdAt),
