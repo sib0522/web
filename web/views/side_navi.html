@@ -8,6 +8,10 @@
                     <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                     Dashboard
                 </a>
+                <a class="nav-link" href="/user">
+                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    Users
+                </a>
                 <div class="sb-sidenav-menu-heading">Interface</div>
                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                     <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
@@ -25,6 +29,7 @@
                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                 </a>
                 <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                    {{ if eq .IsLogin false }}
                     <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">
                             Authentication
@@ -32,18 +37,16 @@
                         </a>
                         <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="account/login" id="login">Login</a>
-                                <a class="nav-link" href="account/register">Register</a>
-                                <a class="nav-link" href="account/password">Forgot Password</a>
+                                <a class="nav-link" href="/account/login" id="login">Login</a>
+                                <a class="nav-link" href="/account/register">Register</a>
+                                <a class="nav-link" href="/account/password">Forgot Password</a>
                             </nav>
                         </div>
                     </nav>
+                    {{ else }}
+                    {{ end }}
                 </div>
                 <div class="sb-sidenav-menu-heading">Addons</div>
-                <a class="nav-link" href="../public/charts.html">
-                    <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                    Charts
-                </a>
                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseTables" aria-expanded="false" aria-controls="collapseTables">
                     <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                     Tables
@@ -51,10 +54,10 @@
                 </a>
                 <div class="collapse" id="collapseTables" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionTables">
-                        <a class="nav-link" href="javascript:void(0)" data-bs-target="#tableCollapseAuth" onclick="checkLogin('/table/admin')">
+                        <a class="nav-link" href="/table/admin" data-bs-target="#tableCollapseAuth">
                             管理画面DB
                         </a>
-                        <a class="nav-link" href="javascript:void(0)" data-bs-target="#tableCollapseError" onclick="checkLogin('/table/game')">
+                        <a class="nav-link" href="/table/game" data-bs-target="#tableCollapseError">
                             ゲームDB
                         </a>
                         <div class="collapse" id="tableCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
@@ -66,9 +69,9 @@
                         </div>
                     </nav>
                 </div>
-                <a class="nav-link" href="/file/upload">
+                <a class="nav-link" href="/file/resource">
                     <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                    File Upload
+                    Resource
                 </a>
                 <a class="nav-link" href="/file/gallery">
                     <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
@@ -77,9 +80,13 @@
             </div>
         </div>
         <div class="sb-sidenav-footer">
-            <div class="small">おはようございます！</div>
-            <label id="userName">Anonymous</label>様
+            {{ if eq .IsLogin true }}
+            <div class="small">ログイン中: </div>
+            <label id="userName">{{ .LoginEmail }}</label>様
+            {{ else }}
+            {{ end }}
         </div>
     </nav>
 </div>
+<script src="/web/public/js/cookie.js"></script>
 {{end}}
