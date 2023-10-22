@@ -1,10 +1,11 @@
-package models
+package model
 
 import (
 	"GoEcho/database"
 	"fmt"
-	"golang.org/x/crypto/bcrypt"
 	"time"
+
+	"golang.org/x/crypto/bcrypt"
 
 	"github.com/labstack/gommon/log"
 )
