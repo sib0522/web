@@ -1,13 +1,3 @@
-const token = getToken()
-if (token !== null) {
-    const loginMenu = document.getElementById("login")
-    loginMenu.style.display = "none"
-    $(document).ready(function (){
-        const token = getToken()
-        $("#userName").text("dd")
-    })
-}
-
 const c = getCookie("sideNaviLayout")
 if (c != "false") {
     const layoutColor = document.getElementById("sidenavAccordion")
