@@ -1,10 +1,14 @@
-package logic
+package models
 
 import (
-	"GoEcho/models"
+	"GoEcho/app/domain/model"
+	"GoEcho/app/domain/repo"
+	"GoEcho/app/util/clock"
+	"net/http"
+
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
-	"net/http"
+	"golang.org/x/xerrors"
 )
 
 func SignUp(c echo.Context) error {
@@ -15,12 +19,7 @@ func SignUp(c echo.Context) error {
 	confirm := c.FormValue("password2")
 
 	if nickName == "" || email == "" || p == "" || confirm == "" {
-		return c.Redirect(http.StatusFound, "/register")
-		/*
-			return c.Render(http.StatusOK, "/register", map[string]bool{
-				"isShowAlert": true,
-			})
-		*/
+		return xerrors.Errorf("全て入力してください")
 	}
 
 	if p != confirm {
@@ -31,17 +30,17 @@ func SignUp(c echo.Context) error {
 
 	password := string(hash)
 
-	account := models.Account{
-		Nickname: nickName,
-		Password: password,
-		Email:    email,
+	adminAccountRepo := repo.NewAdminAccountRepo()
+	adminAccount, err := adminAccountRepo.ReadByEmail(email)
+	if err != nil {
 	}
-
-	if b := account.Read(); b == true {
+	if adminAccount.Id() != 0 {
 		return c.String(http.StatusExpectationFailed, "既に存在しているアカウント名です")
 	}
 
-	account.Create()
+	t := clock.Now().Time
+
+	adminAccountRepo.CreateByModel(model.NewAdminAccount(email, password, nickName, t))
 
 	return c.Render(http.StatusOK, "success", nil)
 }

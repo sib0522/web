@@ -1,17 +1,18 @@
-package logic
+package models
 
 import (
+	"GoEcho/web/lib"
 	"crypto/sha1"
 	"encoding/hex"
 	"fmt"
-	"github.com/labstack/echo/v4"
-	"io"
 	"net/http"
 	"os"
 	"path/filepath"
+
+	"github.com/labstack/echo/v4"
 )
 
-func UploadImage(c echo.Context) error {
+func UploadResource(c echo.Context) error {
 	file, err := c.FormFile("file")
 	if err != nil {
 		return c.NoContent(http.StatusInternalServerError)
@@ -33,15 +34,16 @@ func UploadImage(c echo.Context) error {
 
 	filePath := fmt.Sprintf("%v/%v%v", dir, hashedName, ext)
 
-	dst, err := os.Create(filePath)
-	if err != nil {
-		return c.NoContent(http.StatusInternalServerError)
-	}
-	defer dst.Close()
-
-	if _, err = io.Copy(dst, src); err != nil {
-		return err
-	}
+	aws := lib.NewAWSService()
+	aws.UploadMultiple([]string{filePath})
 
 	return c.HTML(http.StatusOK, fmt.Sprintf("<p>File %s uploaded successfully.", hashed))
+}
+
+func DownloadResource(c echo.Context) error {
+	aws := lib.NewAWSService()
+	if err := aws.DownloadMultiple("uploads/public/images/"); err != nil {
+		return err
+	}
+	return nil
 }

@@ -1,7 +1,7 @@
-package logic
+package models
 
 import (
-	"GoEcho/models"
+	"GoEcho/app/domain/model"
 	"net/http"
 
 	"github.com/labstack/echo-contrib/session"
@@ -17,7 +17,7 @@ func Delete(c echo.Context) error {
 	if b, err := ses.Values["in"]; b == false || err {
 		return c.String(http.StatusUnauthorized, "401")
 	}
-	acc := &models.Account{
+	acc := &model.Account{
 		Id: ses.Values["id"].(uint),
 	}
 	if b := acc.Delete(); !b {

@@ -1,7 +1,6 @@
-package logic
+package models
 
 import (
-	"GoEcho/constants"
 	"fmt"
 	"os"
 )
@@ -11,8 +10,10 @@ type Gallery struct {
 	DataList []string
 }
 
+const GalleryDirectory = "./web/public/images"
+
 func CreateGallery() Gallery {
-	files, err := os.ReadDir(constants.GalleryDirectory)
+	files, err := os.ReadDir(GalleryDirectory)
 	if err != nil {
 		fmt.Println("there is no file")
 	}
@@ -21,7 +22,7 @@ func CreateGallery() Gallery {
 
 	for i, f := range files {
 		//str := fmt.Sprintf("\".%v/%v\" class=\"w-100 p-lg-4 shadow-1-strong rounded mb-4\" alt=\"%v\"", constants.GalleryDirectory, f.Name(), f.Name())
-		str := fmt.Sprintf(".%v/%v", constants.GalleryDirectory, f.Name())
+		str := fmt.Sprintf(".%v/%v", GalleryDirectory, f.Name())
 		list[i] = str
 	}
 

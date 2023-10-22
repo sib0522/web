@@ -1,4 +1,4 @@
-package logic
+package models
 
 import (
 	"github.com/labstack/echo/v4"
