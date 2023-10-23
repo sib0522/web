@@ -1,54 +1,49 @@
 package application
 
 import (
-	"GoEcho/app/domain/factory"
-	"GoEcho/app/domain/repository"
-	"fmt"
+	"GoEcho/app/api/ApiUserLogin"
+	"GoEcho/app/domain/model"
+	"GoEcho/app/domain/repo"
+	"GoEcho/app/util/clock"
 )
 
-type UserCreateService struct {
-	userRepo    repository.UserDataRepo
-	userFactory factory.IUserFactory
+type UserStatusUpdateService struct {
+	userStatusRepo repo.UserStatusRepo
 }
 
-func NewUserCreateService() *UserCreateService {
-	return &UserCreateService{}
+func NewUserStatusUpdateService() *UserStatusUpdateService {
+	return &UserStatusUpdateService{}
 }
 
-func (service *UserCreateService) UserCreate() (string, error) {
-	uuid, err := service.userFactory.NewUserData()
-	if err != nil {
+func (service *UserStatusUpdateService) UserStatusUpdate() {
+}
 
-		// 何かエラーを返す
-		return "", nil
+type UserLoginService struct {
+	userStatusRepo repo.UserStatusRepo
+}
+
+func NewUserLoginService(userStatusRepo *repo.UserStatusRepo) *UserLoginService {
+	return &UserLoginService{
+		userStatusRepo: *userStatusRepo,
 	}
-	// user repositoryを通じてDBにuserのuuidを保存する
-	service.userRepo.Update(uuid)
-	fmt.Println("user create")
-
-	// jsonにシリアライズしてクライアントへ返す
-
-	return uuid, nil
 }
 
-type UserUpdateService struct {
-}
+func (r *UserLoginService) UserLoginService(req *ApiUserLogin.Request) (*ApiUserLogin.Response, error) {
+	res := &ApiUserLogin.Response{}
 
-func NewUserUpdateService() *UserUpdateService {
-	return &UserUpdateService{}
-}
+	t := clock.Now().Time
 
-func (service *UserUpdateService) UserUpdate() {
-	fmt.Println("user update")
-}
+	userStatus, err := r.userStatusRepo.ReadByUuid(req.Uuid)
+	if err != nil {
+		userStatus = model.NewUserStatus(t)
 
-type UserLoadService struct {
-}
+		// 新しく生成したユーザーデータをDBに保存
+		r.userStatusRepo.CreateOrUpdateByModel(userStatus)
+		return res, err
+	}
+	res.Uuid = userStatus.Uuid()
+	res.Level = userStatus.Level()
+	res.Exp = userStatus.Exp()
 
-func NewUserLoadService() *UserLoadService {
-	return &UserLoadService{}
-}
-
-func (service *UserLoadService) UserLoad() {
-	fmt.Println("user load")
+	return res, nil
 }

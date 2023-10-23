@@ -1,10 +1,10 @@
 package database
 
 import (
+	"GoEcho/web/lib"
 	"database/sql"
 	"fmt"
 	"log"
-	"os"
 
 	_ "github.com/go-sql-driver/mysql"
 	"gopkg.in/yaml.v3"
@@ -26,8 +26,14 @@ type DBConfig struct {
 
 func loadDBInfo() *DBInfo {
 	dbConfig := DBConfig{}
-	b, _ := os.ReadFile("config.yaml")
-	err := yaml.Unmarshal(b, &dbConfig)
+	//b, _ := os.ReadFile("./config/config.yaml")
+	b, err := lib.NewAWSService().DonwloadConfig()
+	if err != nil {
+		log.Fatal(err)
+		return nil
+	}
+
+	err = yaml.Unmarshal(b, &dbConfig)
 	if err != nil {
 		log.Fatal(err)
 		return nil

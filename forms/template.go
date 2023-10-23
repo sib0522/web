@@ -1,9 +1,10 @@
 package forms
 
 import (
-	"github.com/labstack/echo/v4"
 	"html/template"
 	"io"
+
+	"github.com/labstack/echo/v4"
 )
 
 type TemplateRenderer struct {
@@ -11,31 +12,14 @@ type TemplateRenderer struct {
 }
 
 func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
+	if data != nil {
+	}
 	return t.templates.ExecuteTemplate(w, name, data)
 }
 
-func getRenderer(fileName string) *TemplateRenderer {
+func InitRenderer(e *echo.Echo) {
 	renderer := &TemplateRenderer{
-		//templates: template.Must(goingtpl.ParseFile(fileName)),
-		templates: template.Must(template.ParseGlob("./views/*.html")),
-		//templates: template.Must(template.ParseGlob("./views/*.html")),
+		templates: template.Must(template.ParseGlob("web/views/*.html")),
 	}
-	return renderer
-}
-
-/*
-func getFuncMapRenderer(fileName string) *TemplateRenderer {
-	tpl := template.HTMLAttr("./views/gallery.html")
-	renderer := &TemplateRenderer{
-		templates: tpl
-	}
-}
-*/
-
-func SetRenderer(e *echo.Echo, fileName string) {
-	e.Renderer = getRenderer(fileName)
-}
-
-func SetFuncMapRenderer(e *echo.Echo, fileName string) {
-	e.Renderer = getRenderer(fileName)
+	e.Renderer = renderer
 }

@@ -1,0 +1,47 @@
+{{define "table_detail"}}
+<html>
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="http://localhost:1323/web/public/css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+</head>
+<body>
+{{template "header_navi" .Common.IsLogin}}
+<div id="layoutSidenav">
+    {{template "side_navi" .Common }}
+    <div id="layoutSidenav_content">
+        <div class="container-fluid px-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-table me-1"></i>
+                    {{ .Table.Name }}
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped" id="datatablesSimple">
+                        <thead>
+                        <tr>
+                            {{ range .Table.Columns }}
+                            <th>{{ . }}</th>
+                            {{ end }}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{ range .Table.Rows }}
+                        <tr>
+                            {{ range . }}
+                            <td>{{ . }}</td>
+                            {{ end }}
+                        {{ end }}
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {{template "footer_label"}}
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>
+{{end}}

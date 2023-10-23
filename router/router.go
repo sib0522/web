@@ -1,64 +1,58 @@
 package router
 
 import (
-	"GoEcho/controllers"
+	"GoEcho/app/api"
 	"GoEcho/forms"
-	"GoEcho/logic"
-	"fmt"
+	"GoEcho/web/controllers"
+	"GoEcho/web/models"
+
 	"github.com/labstack/echo/v4"
 )
 
-func InitRouting(e *echo.Echo) {
-	fmt.Println("____________[Init]Router____________")
+type IRouter interface {
+	InitRouting(e *echo.Echo)
+}
+type Router struct {
+	IRouter
+}
 
-	// 静的ページの読み込み設定
-	e.Static("/public", "public")
-	forms.SetRenderer(e, "")
-
-	InitPages(e)
-	InitLogics(e)
+func (Router) InitRouting(e *echo.Echo) {
+	initWebPage(e)
+	initLogic(e)
+	initApi(e)
 }
 
 // InitPages 各ページのルーター処理を設定する
-func InitPages(e *echo.Echo) {
-	/*
-		jwtConfig := echojwt.Config{
-			NewClaimsFunc: func(c echo.Context) jwt.Claims {
-				return new(logic.TokenData)
-			},
-			SigningKey: []byte("jwtUserLogin"),
-		}
-	*/
+func initWebPage(e *echo.Echo) {
+	// 静的ページの読み込み設定
+	e.Static("/web/public", "/web/public")
+	forms.InitRenderer(e)
 
 	e.GET("/", controllers.Index)
+	e.GET("/user", controllers.User)
 	e.GET("/account/register", controllers.Register)
 	e.GET("/account/login", controllers.Login)
 	e.GET("/account/password", controllers.Password)
 	e.GET("/account/delete", controllers.Delete)
-	e.GET("/file/upload", controllers.FileUpload)
+	e.GET("/file/resource", controllers.Resource)
 	e.GET("/file/gallery", controllers.Gallery)
-	e.GET("/table/admin", controllers.TableList)
+	e.GET("/table/:name", controllers.TableList)
 	e.GET("/table/admin/:name", controllers.TableDetail)
-	//e.GET("/table/game", controllers.TableList)
-	//e.GET("/table/game/:name", controllers.TableDetail)
-	e.GET("/ws", controllers.Chat)
-	e.GET("/layout/color", controllers.Layout)
-
-	/*
-		tableGroup := e.Group("/table")
-		tableGroup.Use(echojwt.WithConfig(jwtConfig))
-		//tableGroup.GET("", logic.JWTCheck)
-		tableGroup.GET("/admin", controllers.TableList)
-		tableGroup.GET("/game", controllers.TableList)
-	*/
 }
 
 // InitLogics Logic周りのルーター処理を設定する
-func InitLogics(e *echo.Echo) {
-	e.POST("/logic/signup", logic.SignUp)
-	e.POST("/account/login", logic.Login)
-	e.POST("/logic/sendmail", logic.SendMail)
-	e.POST("/logic/delete", logic.Delete)
-	e.GET("/logic/logout", logic.Logout)
-	e.POST("/upload/images", logic.UploadImage)
+func initLogic(e *echo.Echo) {
+	e.POST("/account/register", models.SignUp)
+	e.POST("/account/login", models.Login)
+	e.POST("/logic/sendmail", models.SendMail)
+	e.POST("/logic/delete", models.Delete)
+	e.GET("/account/logout", models.Logout)
+	e.POST("/resource/upload", models.UploadResource)
+	e.POST("/resource/download", models.DownloadResource)
+	e.POST("/user", models.CheckUserId)
+}
+
+// ゲームロジックAPIを設定
+func initApi(e *echo.Echo) {
+	e.POST("/user/:apiName", api.Handler)
 }
