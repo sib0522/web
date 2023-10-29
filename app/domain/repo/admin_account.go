@@ -25,8 +25,7 @@ func (r *adminAccountRepo) TableName() string {
 	return "admin_account"
 }
 
-func (r *adminAccountRepo) CreateByModel(model *model.AdminAccount) {
-	db := database.ConnectDB()
+func (r *adminAccountRepo) CreateByModel(model *model.AdminAccount) error {
 	query := fmt.Sprintf("INSERT INTO %v (email, password, nickname, updated_at, created_at) VALUES ('%v','%v','%v', '%v', '%v')",
 		r.TableName(),
 		model.Email(),
@@ -35,18 +34,21 @@ func (r *adminAccountRepo) CreateByModel(model *model.AdminAccount) {
 		model.UpdatedAt().Format(clock.DateTimeFormat),
 		model.CreatedAt().Format(clock.DateTimeFormat),
 	)
-	db.Query(query)
+
+	// 結果を返す必要はないのでエラーだけチェック
+	err := database.Instance().QueryRow(query).Err()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (r *adminAccountRepo) ReadByEmail(email string) (*model.AdminAccount, error) {
-	db := database.ConnectDB()
 	query := fmt.Sprintf("SELECT * FROM %v WHERE email = '%v'", r.TableName(), email)
-	rows := db.Query(query)
-
-	for rows.Next() {
-		if err := rows.Scan(&r.Id, &r.Email, &r.Password, &r.Nickname, &r.UpdatedAt, &r.CreatedAt); err != nil {
-			return nil, err
-		}
+	err := database.Instance().QueryRow(query).Scan(&r.Id, &r.Email, &r.Password, &r.Nickname, &r.UpdatedAt, &r.CreatedAt)
+	if err != nil {
+		return nil, err
 	}
 
 	result := model.NewAdminAccountByRepo(r.Email, r.Password, r.Nickname, r.UpdatedAt, r.CreatedAt)
@@ -54,24 +56,23 @@ func (r *adminAccountRepo) ReadByEmail(email string) (*model.AdminAccount, error
 }
 
 func (r *adminAccountRepo) ReadById(id uint32) (*model.AdminAccount, error) {
-	db := database.ConnectDB()
 	query := fmt.Sprintf("SELECT * FROM %v WHERE id = '%v'", r.TableName(), id)
-	rows := db.Query(query)
-
-	for rows.Next() {
-		if err := rows.Scan(&r.Id, &r.Email, &r.Password, &r.Nickname, &r.UpdatedAt, &r.CreatedAt); err != nil {
-			return nil, err
-		}
+	err := database.Instance().QueryRow(query).Scan(&r.Id, &r.Email, &r.Password, &r.Nickname, &r.UpdatedAt, &r.CreatedAt)
+	if err != nil {
+		return nil, err
 	}
 
 	result := model.NewAdminAccountByRepo(r.Email, r.Password, r.Nickname, r.UpdatedAt, r.CreatedAt)
 	return result, nil
 }
 
+// テーブルを取得
 func (r *adminAccountRepo) ReadTable() (*model.Table, error) {
-	db := database.ConnectDB()
 	query := fmt.Sprintf("SELECT * FROM %v", r.TableName())
-	rows := db.Query(query)
+	rows, err := database.Instance().Query(query)
+	if err != nil {
+		return nil, err
+	}
 
 	columns, err := rows.Columns()
 	if err != nil {
@@ -105,4 +106,16 @@ func (r *adminAccountRepo) ReadTable() (*model.Table, error) {
 	}
 
 	return table, nil
+}
+
+// データ削除
+func (r *adminAccountRepo) DeleteByModel(model *model.AdminAccount) error {
+	query := fmt.Sprintf("DELETE FROM %v WHERE id = '%v'", r.TableName(), model.Id())
+
+	// 結果を返す必要はないのでエラーだけチェック
+	err := database.Instance().QueryRow(query).Err()
+	if err != nil {
+		return err
+	}
+	return nil
 }

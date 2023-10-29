@@ -22,12 +22,17 @@ func (r *logAccountRepo) TableName() string {
 	return "log_account"
 }
 
-func (r *logAccountRepo) CreateByModel(model *model.LogAccount) {
-	db := database.ConnectDB()
+func (r *logAccountRepo) CreateByModel(model *model.LogAccount) error {
 	query := fmt.Sprintf("INSERT INTO %v (email, created_at) VALUES ('%v', '%v')",
 		r.TableName(),
 		model.Email(),
 		model.CreatedAt().Format(clock.DateTimeFormat),
 	)
-	db.Query(query)
+
+	err := database.Instance().QueryRow(query).Err()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

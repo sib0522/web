@@ -4,6 +4,7 @@ import (
 	"time"
 )
 
+// 管理画面接続ログ
 type LogAccount struct {
 	id        uint32
 	email     string
