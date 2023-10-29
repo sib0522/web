@@ -6,6 +6,7 @@
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     <link href="http://localhost:1323/web/public/css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <script src="web/public/js/user.js"></script>
 </head>
 <body>
 {{template "header_navi" .Common.IsLogin }}
@@ -20,28 +21,52 @@
                     <li class="breadcrumb-item active">User</li>
                 </ol>
                 <form name="userIdForm" method="post" action="">
-                    <div class="mb-3">
-                      <input type="text" class="form-control" id="userId" name="userId" aria-describedby="ユーザーId"/>
-                        <label for="userId" class="form-label">ユーザーId</label>
+                    <label for="userId" class="form-label" style="font-size: 20px;">ユーザーID</label>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Id</span>
+                        <input type="text" class="form-control" id="userId" name="userId" aria-describedby="ユーザーId"/>
                     </div>
                     <input class="btn btn-primary" id="submit" type="button" value="検索" onclick="loadUserPage()"/>
-                    <script>
-                        function loadUserPage() {
-                            const obj = document.forms["userIdForm"]
-                            $.ajax({
-                                type:'post',
-                                url:'/user',
-                                async:false,
-                                dataType:'html',
-                                data:$(obj).serialize()
-                            }).done(function (email){
-                                alert(email + " 検索成功")
-                            }).fail(function (data){
-                                alert("検索失敗")
-                            })
-                        }
-                    </script>
-                  </form>                  
+                  </form>
+                  <div id="userDetail" style="display: none;">
+                    <label class="form-label">ユーザーデータ修正</label>
+                    <form id="levelForm" name="levelForm" method="post" action="">
+                      <div class="input-group mb-3">
+                        <span class="input-group-text">Level</span>
+                        <input type="text" class="form-control" id="level" placeholder="Level" aria-label="Level" aria-describedby="basic-addon1">
+                        <input class="btn btn-outline-secondary" id="levelSubmit" type="button" value="更新" onclick="updateUserData('level')"/>
+                      </div>
+                    </form>
+                    <form name="expForm" method="post" action="">
+                      <div class="input-group mb-3">
+                        <span class="input-group-text">Exp</span>
+                        <input type="text" class="form-control" id="exp" placeholder="Exp" aria-label="Exp" aria-describedby="basic-addon1">
+                        <input class="btn btn-outline-secondary" id="expSubmit" type="button" value="更新" onclick="updateUserData('exp')"/>
+                      </div>
+                    </form>
+                    <form name="moneyForm" method="post" action="">
+                      <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">Money</span>
+                        <input type="text" class="form-control" id="money" placeholder="Money" aria-label="Money" aria-describedby="basic-addon1">
+                        <input class="btn btn-outline-secondary" id="moneySubmit" type="button" value="更新" onclick="updateUserData('money')"/>
+                      </div>
+                    </form>                  
+                      <div class="input-group mb-3">
+                        <span class="input-group-text">Created At</span>
+                        <input type="text" class="form-control" id="created" aria-describedby="basic-addon3" disabled readonly>
+                      </div>
+
+                      <div class="input-group mb-3">
+                        <span class="input-group-text">Last Login</span>
+                        <input type="text" class="form-control" id="lastLogin" aria-describedby="basic-addon3" disabled readonly>
+                      </div>
+                      
+                      <div class="input-group">
+                        <span class="input-group-text">Memo</span>
+                        <textarea class="form-control" aria-label="With textarea"></textarea>
+                        <input class="btn btn-outline-secondary" id="memoSubmit" type="button" value="更新" onclick="loadUserPage()"/>
+                      </div>                      
+                  </div>
             </div>
         </main>
         {{template "footer_label"}}
