@@ -10,13 +10,14 @@ import (
 )
 
 type IRouter interface {
-	InitRouting(e *echo.Echo)
+	Initialize(e *echo.Echo)
 }
 type Router struct {
 	IRouter
 }
 
-func (Router) InitRouting(e *echo.Echo) {
+// ルーター初期化
+func (Router) Initialize(e *echo.Echo) {
 	initWebPage(e)
 	initLogic(e)
 	initApi(e)
@@ -50,6 +51,7 @@ func initLogic(e *echo.Echo) {
 	e.POST("/resource/upload", models.UploadResource)
 	e.POST("/resource/download", models.DownloadResource)
 	e.POST("/user", models.CheckUserId)
+	e.POST("/user/data/:name", models.UpdateUserData)
 }
 
 // ゲームロジックAPIを設定

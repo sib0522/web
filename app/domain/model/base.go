@@ -1,11 +1,5 @@
 package model
 
-type Model interface {
-	Create()
-	ReadColumns() []string
-	ReadAllToString() map[uint][]string
-}
-
 type Table struct {
 	Name    string
 	Columns []string

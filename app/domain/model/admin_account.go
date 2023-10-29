@@ -4,6 +4,7 @@ import (
 	"time"
 )
 
+// 管理画面アカウント
 type AdminAccount struct {
 	id        uint32
 	email     string

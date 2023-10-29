@@ -13,14 +13,12 @@ function getCookie(key) {
     let result = null;
     const cookie = document.cookie.split(';');
     cookie.some(function (item) {
-        // 공백을 제거
+        // 空白を削る
         item = item.replace(' ', '');
-
         const dic = item.split('=');
-
         if (key === dic[0]) {
             result = dic[1];
-            return true;    // break;
+            return true;
         }
     });
     return result.replaceAll('%20', ' ');
