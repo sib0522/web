@@ -4,65 +4,60 @@ import (
 	"GoEcho/web/lib"
 	"database/sql"
 	"fmt"
-	"log"
+
+	"gopkg.in/yaml.v3"
 
 	_ "github.com/go-sql-driver/mysql"
-	"gopkg.in/yaml.v3"
 )
 
-type DB struct {
-	instance *sql.DB
-}
-
 type DBInfo struct {
+	// NOTE:小文字にしちゃうと外から参照できないので注意
 	DBName string `yaml:"root"`
 	DBPass string `yaml:"password"`
 	DBPort string `yaml:"port"`
 }
 
 type DBConfig struct {
+	// NOTE:小文字にしちゃうと外から参照できないので注意
 	Info DBInfo `yaml:"database"`
 }
 
-func loadDBInfo() *DBInfo {
-	dbConfig := DBConfig{}
+type DB struct {
+	instance *sql.DB
+}
+
+var db DB
+
+func Instance() *sql.DB {
+	return db.instance
+}
+
+// DBに接続
+func ConnectDB() error {
+	dbConfig := &DBConfig{}
 	//b, _ := os.ReadFile("./config/config.yaml")
 	b, err := lib.NewAWSService().DonwloadConfig()
 	if err != nil {
-		log.Fatal(err)
-		return nil
+		return err
 	}
 
-	err = yaml.Unmarshal(b, &dbConfig)
+	err = yaml.Unmarshal(b, dbConfig)
 	if err != nil {
-		log.Fatal(err)
-		return nil
+		return err
 	}
-	return &dbConfig.Info
-}
 
-func ConnectDB() *DB {
-	conf := loadDBInfo()
+	conf := dbConfig.Info
 	fmt.Println("db connection start...")
 	dbSource := fmt.Sprintf("%v:%v@(%v)/db?parseTime=true", conf.DBName, conf.DBPass, conf.DBPort)
 
-	db, err := sql.Open("mysql", dbSource)
+	sqlDB, err := sql.Open("mysql", dbSource)
 	if err != nil {
-		log.Fatal(err)
-		return nil
+		return err
 	}
 
-	dbs := DB{instance: db}
+	db = DB{instance: sqlDB}
 
-	return &dbs
-}
+	fmt.Println("db connection success.")
 
-func (db *DB) Query(query string) *sql.Rows {
-	res, err := db.instance.Query(query)
-	if err != nil {
-		log.Fatal(err)
-		return nil
-	}
-
-	return res
+	return nil
 }
