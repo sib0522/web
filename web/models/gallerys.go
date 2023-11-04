@@ -6,16 +6,15 @@ import (
 )
 
 type Gallery struct {
-	IsLogin  bool
 	DataList []string
 }
 
 const GalleryDirectory = "./web/public/images"
 
-func CreateGallery() Gallery {
+func CreateGallery() (*Gallery, error) {
 	files, err := os.ReadDir(GalleryDirectory)
 	if err != nil {
-		fmt.Println("there is no file")
+		return nil, err
 	}
 
 	list := make([]string, 10)
@@ -28,5 +27,5 @@ func CreateGallery() Gallery {
 
 	gallery := &Gallery{DataList: list}
 
-	return *gallery
+	return gallery, nil
 }

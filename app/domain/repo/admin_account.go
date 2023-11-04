@@ -74,9 +74,16 @@ func (r *adminAccountRepo) ReadTable() (*model.Table, error) {
 		return nil, err
 	}
 
-	columns, err := rows.Columns()
+	cols, err := rows.Columns()
 	if err != nil {
 		return nil, err
+	}
+
+	var columns []string
+	for _, col := range cols {
+		if col != "password" {
+			columns = append(columns, col)
+		}
 	}
 
 	type holder struct {
@@ -95,7 +102,7 @@ func (r *adminAccountRepo) ReadTable() (*model.Table, error) {
 		if err := rows.Scan(&model.Id, &model.Email, &model.Password, &model.Nickname, &model.UpdatedAt, &model.CreatedAt); err != nil {
 			return nil, err
 		}
-		value := []string{model.Id, model.Email, model.Password, model.Nickname, model.UpdatedAt, model.CreatedAt}
+		value := []string{model.Id, model.Email, model.Nickname, model.UpdatedAt, model.CreatedAt}
 		values = append(values, value)
 	}
 

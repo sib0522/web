@@ -9,22 +9,15 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type IRouter interface {
-	Initialize(e *echo.Echo)
-}
-type Router struct {
-	IRouter
-}
-
 // ルーター初期化
-func (Router) Initialize(e *echo.Echo) {
-	initWebPage(e)
-	initLogic(e)
+func Initialize(e *echo.Echo) {
+	initViews(e)
+	initModels(e)
 	initApi(e)
 }
 
-// InitPages 各ページのルーター処理を設定する
-func initWebPage(e *echo.Echo) {
+// InitViews ページの表示
+func initViews(e *echo.Echo) {
 	// 静的ページの読み込み設定
 	e.Static("/web/public", "/web/public")
 	forms.InitRenderer(e)
@@ -41,8 +34,8 @@ func initWebPage(e *echo.Echo) {
 	e.GET("/table/admin/:name", controllers.TableDetail)
 }
 
-// InitLogics Logic周りのルーター処理を設定する
-func initLogic(e *echo.Echo) {
+// InitModels ロジックのエンドポイントを設定
+func initModels(e *echo.Echo) {
 	e.POST("/account/register", models.SignUp)
 	e.POST("/account/login", models.Login)
 	e.POST("/logic/sendmail", models.SendMail)
@@ -54,7 +47,7 @@ func initLogic(e *echo.Echo) {
 	e.POST("/user/data/:name", models.UpdateUserData)
 }
 
-// ゲームロジックAPIを設定
+// initApi ゲームロジックAPIを設定
 func initApi(e *echo.Echo) {
 	e.POST("/user/:apiName", api.Handler)
 }

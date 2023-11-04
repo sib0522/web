@@ -38,11 +38,36 @@ func NewUserStatusByRepo(uuid string, level uint32, exp, money uint64, createdAt
 	}
 }
 
-func (r *UserStatus) Update(level uint32, exp, money uint64, t time.Time) {
-	r.level = level
-	r.exp = exp
-	r.money = money
-	r.updatedAt = t
+type UserStatusEntity struct {
+	Id        uint32
+	Uuid      string
+	Level     uint32
+	Exp       uint64
+	Money     uint64
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
+func (r *UserStatus) Entity() *UserStatusEntity {
+	return &UserStatusEntity{
+		Id:        r.id,
+		Uuid:      r.uuid,
+		Level:     r.level,
+		Exp:       r.exp,
+		Money:     r.money,
+		CreatedAt: r.createdAt,
+		UpdatedAt: r.updatedAt,
+	}
+}
+
+func (r *UserStatusEntity) Apply(model *UserStatus) {
+	model.id = r.Id
+	model.uuid = r.Uuid
+	model.level = r.Level
+	model.exp = r.Exp
+	model.money = r.Money
+	model.createdAt = r.CreatedAt
+	model.updatedAt = r.UpdatedAt
 }
 
 func (r *UserStatus) Id() uint32 {

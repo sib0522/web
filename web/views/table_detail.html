@@ -7,6 +7,9 @@
 </head>
 <body>
 {{template "header_navi" .Common.IsLogin}}
+    <script>
+        isLogin({{.Common.IsLogin}})
+    </script>    
 <div id="layoutSidenav">
     {{template "side_navi" .Common }}
     <div id="layoutSidenav_content">
