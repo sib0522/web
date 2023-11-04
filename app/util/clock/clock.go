@@ -24,8 +24,3 @@ type Clock struct {
 func Now() *Clock {
 	return &Clock{now.New(time.Now())}
 }
-
-func NowTime() time.Time {
-	v := time.Now()
-	return v
-}

@@ -61,3 +61,8 @@ func ConnectDB() error {
 
 	return nil
 }
+
+// 該当するデータがない場合のエラーか
+func IsErrorNoRows(err error) bool {
+	return err.Error() == "sql: no rows in result set"
+}
