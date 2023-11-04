@@ -16,8 +16,7 @@ import (
 	"golang.org/x/xerrors"
 )
 
-type AWS struct {
-}
+type AWS struct{}
 
 func NewAWSService() *AWS {
 	return &AWS{}

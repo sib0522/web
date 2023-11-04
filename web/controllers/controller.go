@@ -33,9 +33,13 @@ func Resource(c echo.Context) error {
 }
 
 func Gallery(c echo.Context) error {
+	gallery, err := models.CreateGallery()
+	if err != nil {
+		return err
+	}
 	renderMap := map[string]any{
 		"Common":  models.Common,
-		"Gallery": models.CreateGallery(),
+		"Gallery": gallery,
 	}
 	return c.Render(http.StatusOK, "gallery", &renderMap)
 }
