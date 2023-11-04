@@ -1,9 +1,10 @@
 package models
 
 import (
-	"github.com/labstack/echo/v4"
 	"net/http"
 	"net/smtp"
+
+	"github.com/labstack/echo/v4"
 )
 
 func SendMail(c echo.Context) error {
