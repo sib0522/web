@@ -1,6 +1,7 @@
 package main
 
 import (
+	"GoEcho/database"
 	"GoEcho/router"
 	"GoEcho/web/models"
 	"fmt"
@@ -18,14 +19,17 @@ func main() {
 	// 通信を行うたびにログイン状態を確認
 	e.Use(checkSession)
 
+	// Router初期化
 	fmt.Println("____________[Init]Router____________")
-	router := router.Router{}
-	router.InitRouting(e)
+	router.Initialize(e)
 
+	// DB接続
+	fmt.Println("____________[Init]DB________________")
+	database.ConnectDB()
+
+	// サーバー起動
 	fmt.Println("____________[Init]Server____________")
 	e.Logger.Fatal(e.Start(":1323"))
-
-	//go:generate go run github.com/shamaton/msgpackgen
 }
 
 func checkSession(next echo.HandlerFunc) echo.HandlerFunc {
