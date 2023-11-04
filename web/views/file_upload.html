@@ -4,13 +4,13 @@
     <meta charset="utf-8">
     <title>File Upload Page</title>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-    <link href="http://localhost:1323/web/public/css/styles.css" rel="stylesheet" />
+    <link href="/web/public/css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
 <body>
 {{template "header_navi" .Common.IsLogin }}
     <script>
-    isLogin({{.Common.IsLogin}})
+        isLogin({{.Common.IsLogin}})
     </script>    
 <div id="layoutSidenav">
     {{template "side_navi" .Common }}
