@@ -19,7 +19,8 @@ func Initialize(e *echo.Echo) {
 // InitViews ページの表示
 func initViews(e *echo.Echo) {
 	// 静的ページの読み込み設定
-	e.Static("/web/public", "/web/public")
+	e.Static("/web/public/", "/web/public/")
+
 	forms.InitRenderer(e)
 
 	e.GET("/", controllers.Index)
