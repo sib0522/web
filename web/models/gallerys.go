@@ -13,7 +13,7 @@ const GalleryDirectory = "./web/public/images"
 
 func CreateGallery() (*Gallery, error) {
 	files, err := os.ReadDir(GalleryDirectory)
-	if err == os.ErrNotExist {
+	if os.IsNotExist(err) {
 		// ディレクトリが存在しなかったら作成
 		err = os.Mkdir(GalleryDirectory, os.ModeDir|os.ModePerm)
 		if err != nil {
