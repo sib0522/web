@@ -5,12 +5,9 @@ import (
 	"GoEcho/router"
 	"GoEcho/web/models"
 	"fmt"
-	"os"
 
-	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"golang.org/x/crypto/acme/autocert"
 )
 
 func main() {
@@ -32,21 +29,7 @@ func main() {
 
 	// サーバー起動
 	fmt.Println("____________[Init]Server____________")
-
-	err := godotenv.Load(".env")
-	if err != nil {
-		e.Logger.Fatal(err)
-	}
-
-	certManager := autocert.Manager{
-		Prompt:     autocert.AcceptTOS,
-		HostPolicy: autocert.HostWhitelist(os.Getenv("DOMAIN_ADMIN_DEV")),
-		Cache:      autocert.DirCache("certs"),
-	}
-
-	e.Listener = certManager.Listener()
-
-	e.Logger.Fatal(e.StartTLS(":1323", "", ""))
+	e.Logger.Fatal(e.Start(":1323"))
 }
 
 func checkSession(next echo.HandlerFunc) echo.HandlerFunc {
