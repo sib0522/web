@@ -1,9 +1,13 @@
 package lib
 
 import (
+	"crypto/sha1"
+	"encoding/hex"
 	"fmt"
 	"io"
+	"mime/multipart"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/aws/aws-sdk-go/aws/credentials"
@@ -23,26 +27,10 @@ func NewAWSService() *AWS {
 }
 
 // ファイルをs3にアップロード
-func (r *AWS) UploadMultiple(filePathList []string) error {
+func (r *AWS) UploadMultiple(fileHeaderList []*multipart.FileHeader) error {
 	err := godotenv.Load(".env")
 	if err != nil {
 		return err
-	}
-
-	// アップロードするファイルリストを作る
-	fileList := make([]*os.File, 0, len(filePathList))
-	for _, path := range filePathList {
-		err := func() error {
-			file, err := os.Open(path)
-			if err != nil {
-				return err
-			}
-			fileList = append(fileList, file)
-			return nil
-		}()
-		if err != nil {
-			return xerrors.Errorf("failed to open file")
-		}
 	}
 
 	sess := session.Must(session.NewSessionWithOptions(session.Options{
@@ -58,21 +46,42 @@ func (r *AWS) UploadMultiple(filePathList []string) error {
 		),
 	})
 
-	for _, file := range fileList {
+	for _, file := range fileHeaderList {
+		body, err := func() (multipart.File, error) {
+			src, err := file.Open()
+			if err != nil {
+				return nil, err
+			}
+			defer src.Close()
+			return src, nil
+		}()
+		if err != nil {
+			return xerrors.Errorf("failed to open file")
+		}
+
+		// ファイル名をハッシュ化
+		ext := filepath.Ext(file.Filename)
+		bt := []byte(file.Filename)
+		hashed := sha1.Sum(bt)
+		hashedFileName := hex.EncodeToString(hashed[:]) + ext
+		prefix := "uploads/"
+		if ext == ".png" || ext == ".jpg" || ext == ".jpeg" {
+			prefix += "Images/"
+		}
+
 		// アップロードする
-		_, err := s3Client.PutObject(&s3.PutObjectInput{
+		_, err = s3Client.PutObject(&s3.PutObjectInput{
 			Bucket: aws.String(os.Getenv("AWS_RESOURCE_BUCKET")),
-			Key:    aws.String("uploads/" + file.Name()),
-			Body:   file,
+			Key:    aws.String(prefix + hashedFileName),
+			Body:   body,
 		})
 
 		// アップロードしたファイルを閉じる（失敗しても閉じる）
-		file.Close()
+		body.Close()
 		if err != nil {
 			return xerrors.Errorf("err : %w", err)
 		}
 	}
-
 	return nil
 }
 
@@ -104,6 +113,10 @@ func (r *AWS) DownloadMultiple(prefix string) error {
 	fileList := make([]*os.File, 0, len(objectList.Contents))
 
 	for _, obj := range objectList.Contents {
+		if *obj.Size == 0 {
+			// サイズが0のもの（フォルダのオブジェクト）はダウンロードしない
+			continue
+		}
 		key := aws.StringValue(obj.Key)
 		fmt.Println("download start : ", key)
 

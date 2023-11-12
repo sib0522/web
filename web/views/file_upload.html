@@ -26,9 +26,9 @@
                 <div class="card mb-4">
                     <div class="card-body">
                         <p class="mb-0">
-                            <form action="/resource/upload" method="post" enctype="multipart/form-data">
-                                Upload: <input type="file" name="file" multiple><br><br>
-                                <input type="submit" value="リソースをアップロードする">
+                            <form id="uploadForm">
+                                Upload: <input type="file" id="fileInput" name="file" multiple><br><br>
+                                <input type="submit" value="リソースをアップロードする" onclick="resourceUpload()">
                             </form>
                         </p>
                     </div>
