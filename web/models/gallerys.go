@@ -26,7 +26,7 @@ func CreateGallery() (*Gallery, error) {
 		return nil, err
 	}
 
-	list := make([]string, 10)
+	list := make([]string, 0, len(files))
 
 	for i, f := range files {
 		//str := fmt.Sprintf("\".%v/%v\" class=\"w-100 p-lg-4 shadow-1-strong rounded mb-4\" alt=\"%v\"", constants.GalleryDirectory, f.Name(), f.Name())
