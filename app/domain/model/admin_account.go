@@ -24,8 +24,9 @@ func NewAdminAccount(email, password, nickname string, t time.Time) *AdminAccoun
 	}
 }
 
-func NewAdminAccountByRepo(email, password, nickname string, updatedAt, createdAt time.Time) *AdminAccount {
+func NewAdminAccountByRepo(id uint32, email, password, nickname string, updatedAt, createdAt time.Time) *AdminAccount {
 	return &AdminAccount{
+		id:        id,
 		email:     email,
 		password:  password,
 		nickname:  nickname,
