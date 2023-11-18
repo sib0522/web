@@ -9,7 +9,6 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
-	"golang.org/x/xerrors"
 )
 
 func SignUp(c echo.Context) error {
@@ -20,7 +19,7 @@ func SignUp(c echo.Context) error {
 	confirm := c.FormValue("password2")
 
 	if nickName == "" || email == "" || p == "" || confirm == "" {
-		return xerrors.Errorf("err : %w", "全て入力してください")
+		return c.String(http.StatusMethodNotAllowed, "全ての項目を入力してください")
 	}
 
 	if p != confirm {
@@ -47,5 +46,5 @@ func SignUp(c echo.Context) error {
 
 	adminAccountRepo.CreateByModel(model.NewAdminAccount(email, password, nickName, t))
 
-	return c.Render(http.StatusOK, "success", nil)
+	return c.String(http.StatusOK, "アカウントが生成されました")
 }

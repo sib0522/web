@@ -11,7 +11,10 @@ function login() {
         localStorage.setItem("user", data)
         location.replace("/")
     }).fail(function (data){
-        alert("ログインに失敗しました")
+        alert("ログインに失敗しました。\n" + data.responseText)
+        if (data.status === 400) {
+            location.replace("/")
+        }
     })
 }
 
@@ -25,7 +28,6 @@ function logout() {
         data:$(obj).serialize()
     }).done(function (data){
         alert("ログアウトしました。\nメイン画面に戻ります")
-        localStorage.setItem("user", data)
         location.replace("/")
     }).fail(function (data){
         alert("ログアウト失敗")
@@ -33,19 +35,18 @@ function logout() {
 }
 
 function signUp() {
-    const obj = document.forms["signup"]
+    const obj = document.forms["signUpForm"]
     $.ajax({
         type:'post',
-        url:'/account/signup',
+        url:'/account/register',
         async:false,
         dataType:'html',
         data:$(obj).serialize()
     }).done(function (data){
         alert("アカウント生成成功\nメイン画面に戻ります")
-        localStorage.setItem("user", data)
         location.replace("/")
     }).fail(function (data){
-        alert("生成に失敗しました")
+        alert("生成に失敗しました。\n" + data.responseText)
     })
 }
 

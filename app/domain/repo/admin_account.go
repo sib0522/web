@@ -51,7 +51,7 @@ func (r *adminAccountRepo) ReadByEmail(email string) (*model.AdminAccount, error
 		return nil, err
 	}
 
-	result := model.NewAdminAccountByRepo(r.Email, r.Password, r.Nickname, r.UpdatedAt, r.CreatedAt)
+	result := model.NewAdminAccountByRepo(r.Id, r.Email, r.Password, r.Nickname, r.UpdatedAt, r.CreatedAt)
 	return result, nil
 }
 
@@ -62,7 +62,7 @@ func (r *adminAccountRepo) ReadById(id uint32) (*model.AdminAccount, error) {
 		return nil, err
 	}
 
-	result := model.NewAdminAccountByRepo(r.Email, r.Password, r.Nickname, r.UpdatedAt, r.CreatedAt)
+	result := model.NewAdminAccountByRepo(r.Id, r.Email, r.Password, r.Nickname, r.UpdatedAt, r.CreatedAt)
 	return result, nil
 }
 

@@ -17,9 +17,25 @@
 <div id="layoutSidenav">
     {{template "side_navi" .Common }}
     <div id="layoutSidenav_content">
-        <img src="/web/public/main.jpg" alt="main" style="max-width:100%; height:auto;">
+        <img id="mainImage" src="/web/public/main.jpg" alt="main" style="max-width:100%; height:auto;">
         {{template "footer_label"}}
     </div>
+
+    <script>
+        window.onload = function () {
+            resizeImage(); // ページ読み込み時に画像をリサイズ
+        };
+
+        window.onresize = function () {
+            resizeImage(); // ウィンドウサイズが変更されたときに画像をリサイズ
+        };
+
+        function resizeImage() {
+            const img = document.getElementById('mainImage');
+            const windowHeight = window.innerHeight;
+            img.style.height = windowHeight + 'px';
+        }
+    </script>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
