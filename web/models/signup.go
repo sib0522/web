@@ -11,6 +11,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// アカウントを作る
 func SignUp(c echo.Context) error {
 	nickName := c.FormValue("name")
 	email := c.FormValue("email")

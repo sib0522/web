@@ -11,6 +11,7 @@ type Gallery struct {
 
 const GalleryDirectory = "./web/public/images"
 
+// ギャラリーを作成
 func CreateGallery() (*Gallery, error) {
 	files, err := os.ReadDir(GalleryDirectory)
 	if os.IsNotExist(err) {
@@ -29,7 +30,6 @@ func CreateGallery() (*Gallery, error) {
 	list := make([]string, 0, len(files))
 
 	for _, f := range files {
-		//str := fmt.Sprintf("\".%v/%v\" class=\"w-100 p-lg-4 shadow-1-strong rounded mb-4\" alt=\"%v\"", constants.GalleryDirectory, f.Name(), f.Name())
 		str := fmt.Sprintf(".%v/%v", GalleryDirectory, f.Name())
 		list = append(list, str)
 	}

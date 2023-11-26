@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// アカウントの削除
 func Delete(c echo.Context) error {
 	ok, email := IsLogin(c)
 	if !ok {

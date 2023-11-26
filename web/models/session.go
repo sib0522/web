@@ -35,7 +35,7 @@ func SessionLogin(c echo.Context, email string) error {
 	// セッションの有効期限を設定（秒単位）
 	session.Options = &sessions.Options{
 		Path:     "/",
-		MaxAge:   120, // 60秒
+		MaxAge:   120,
 		Secure:   false,
 		HttpOnly: true,
 	}

@@ -35,7 +35,7 @@ func main() {
 func checkSession(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		// セッション取得(なければ生成)
-		session, _ := models.Store.Get(c.Request(), "session") // 2
+		session, _ := models.Store.Get(c.Request(), "session")
 
 		// ログイン中のアカウントを取得
 		val := session.Values["email"]

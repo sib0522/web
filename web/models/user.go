@@ -19,6 +19,7 @@ type UserStatusData struct {
 	CreatedAt string `json:"created_at"`
 }
 
+// 存在するIdかチェックし、あればユーザーデータを返す
 func CheckUserId(c echo.Context) error {
 	idStr := c.FormValue("userId")
 	id, err := strconv.ParseUint(idStr, 10, 32)
@@ -43,6 +44,7 @@ func CheckUserId(c echo.Context) error {
 	return c.JSON(http.StatusOK, userStatusData)
 }
 
+// ユーザーデータを更新する
 func UpdateUserData(c echo.Context) error {
 	target := c.Param("name")
 	v := c.FormValue("id")

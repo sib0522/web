@@ -9,6 +9,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// ログイン処理
 func Login(c echo.Context) error {
 	ok, _ := IsLogin(c)
 	if ok {

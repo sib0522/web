@@ -162,6 +162,7 @@ func (r *AWS) DownloadMultiple(prefix string) error {
 	return nil
 }
 
+// ConfigファイルをParameter Stroeからダウンロード
 func (r *AWS) DonwloadConfig() ([]byte, error) {
 	err := godotenv.Load(".env")
 	if err != nil {

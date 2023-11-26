@@ -5,6 +5,7 @@ import (
 	"GoEcho/app/domain/repo"
 )
 
+// テーブルを作る
 func CreateTable(tableName string) (*model.Table, error) {
 	switch tableName {
 	case "account":
