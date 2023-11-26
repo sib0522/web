@@ -1,10 +1,11 @@
 package models
 
 import (
-	"github.com/joho/godotenv"
 	"net/http"
 	"net/smtp"
 	"os"
+
+	"github.com/joho/godotenv"
 
 	"github.com/labstack/echo/v4"
 )

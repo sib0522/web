@@ -35,7 +35,6 @@ func Instance() *sql.DB {
 // DBに接続
 func ConnectDB() error {
 	dbConfig := &DBConfig{}
-	//b, _ := os.ReadFile("./config/config.yaml")
 	b, err := lib.NewAWSService().DonwloadConfig()
 	if err != nil {
 		return err

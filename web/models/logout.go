@@ -6,6 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// ログアウト処理
 func Logout(c echo.Context) error {
 	ok, _ := IsLogin(c)
 	if !ok {
